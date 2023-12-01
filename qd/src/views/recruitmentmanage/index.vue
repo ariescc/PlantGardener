@@ -8,7 +8,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >
-        添加植物
+        发布招聘信息
       </el-button>
     </div>
 
@@ -26,19 +26,34 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="植物名称" align="center">
+      <el-table-column label="岗位名称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.postName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="科属" align="center">
+      <el-table-column label="照顾植物类别" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.plantType }}</span>
+          <span>{{ row.plantName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="生长环境" align="center">
+      <el-table-column label="期望性别" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.environment }}</span>
+          <span>{{ row.sex }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="工作年限" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.workYears }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="工作地点" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.workAddress }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="薪酬" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.reward }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="300" class-name="small-padding fixed-width">
@@ -47,7 +62,7 @@
             详情
           </el-button>
           <el-popconfirm
-            title="确认删除此条植物信息？"
+            title="确认删除此条招聘信息？"
             @onConfirm="handleDelete(row)"
           >
             <el-button slot="reference" size="mini" type="danger">
@@ -61,21 +76,24 @@
     <pagination v-show="total>0" :total="total" :page.sync="page" :limit.sync="limit" @pagination="getList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="plantForm" label-position="left" label-width="100px" style="width: 500px%; margin-left:50px;">
-        <el-form-item label="植株美照">
-          <img :src="plantForm.picture" class="avatar">
+      <el-form ref="dataForm" :rules="rules" :model="recruitmentForm" label-position="left" label-width="100px" style="width: 500px%; margin-left:50px;">
+        <el-form-item label="岗位名称">
+          <el-input v-model="recruitmentForm.postName" />
         </el-form-item>
-        <el-form-item label="名称">
-          <el-input v-model="plantForm.name" />
+        <el-form-item label="照顾植物">
+          <el-input v-model="recruitmentForm.plantName" />
         </el-form-item>
-        <el-form-item label="科属">
-          <el-input v-model="plantForm.plantType" />
+        <el-form-item label="性别要求">
+          <el-input v-model="recruitmentForm.sex" />
         </el-form-item>
-        <el-form-item label="生长环境">
-          <el-input v-model="plantForm.environment" />
+        <el-form-item label="工作年限">
+          <el-input v-model="recruitmentForm.workYears" />
         </el-form-item>
-        <el-form-item label="介绍">
-          <el-input v-model="plantForm.description" :autosize="{ minRows: 2, maxRows: 6}" type="textarea" placeholder="Please input" />
+        <el-form-item label="工作地点">
+          <el-input v-model="recruitmentForm.workAddress" />
+        </el-form-item>
+        <el-form-item label="薪酬">
+          <el-input v-model="recruitmentForm.reward" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -95,7 +113,7 @@ import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 
 export default {
-  name: 'PlantManage',
+  name: 'RecruitmentManage',
   components: { Pagination },
   directives: { waves },
   filters: {
@@ -115,18 +133,19 @@ export default {
       total: 0,
       listLoading: true,
       statusOptions: ['published', 'draft', 'deleted'],
-      plantForm: { // 植物信息表单
-        name: '',
-        plantType: '',
-        environment: '',
-        description: '',
-        picture: ''
+      recruitmentForm: { // 招聘信息表单
+        postName: '',
+        plantName: '',
+        sex: '',
+        workYears: '',
+        reward: '',
+        workAddress: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: '植物详情',
-        create: '登记植物信息'
+        update: '岗位详情',
+        create: '发布招聘信息'
       },
       downloadLoading: false,
       page: 1,
@@ -141,7 +160,7 @@ export default {
     getList() { // 获取所有植物信息
       this.listLoading = true
       this.$axios
-        .get('/plant/list', {
+        .get('/recruitment/list', {
           params: {
             page: this.page,
             limit: this.limit,
@@ -152,14 +171,15 @@ export default {
           if (resp.data.code === 200) {
             console.log(resp)
             this.list = []
-            resp.data.result.items.forEach(plant => {
+            resp.data.result.items.forEach(recruitment => {
               this.list.push({
-                id: plant.id,
-                name: plant.name,
-                plantType: plant.plantType,
-                environment: plant.environment,
-                description: plant.description,
-                picture: plant.picture
+                id: recruitment.id,
+                postName: recruitment.postName,
+                plantName: recruitment.plantName,
+                sex: recruitment.sex,
+                workYears: recruitment.workYears,
+                reward: recruitment.reward,
+                workAddress: recruitment.workAddress
               })
             })
             this.total = resp.data.result.total
@@ -173,28 +193,30 @@ export default {
           this.listLoading = false
         })
     },
-    resetPlantForm() {
-      this.plantForm = { // 植物信息表单
-        name: '',
-        plantType: '',
-        environment: '',
-        description: '',
-        picture: ''
+    resetRecruitmentForm() {
+      this.recruitmentForm = {
+        postName: '',
+        plantName: '',
+        sex: '',
+        workYears: '',
+        reward: '',
+        workAddress: ''
       }
     },
     handleCreate() {
-      this.resetPlantForm()
+      this.resetRecruitmentForm()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
     },
     createData() {
       this.$axios
-        .post('/plant/add', {
-          name: this.plantForm.name,
-          plantType: this.plantForm.plantType,
-          environment: this.plantForm.environment,
-          description: this.plantForm.description,
-          picture: this.plantForm.picture
+        .post('/recruitment/add', {
+          postName: this.recruitmentForm.postName,
+          plantName: this.recruitmentForm.plantName,
+          sex: this.recruitmentForm.sex,
+          workYears: this.recruitmentForm.workYears,
+          reward: this.recruitmentForm.reward,
+          workAddress: this.recruitmentForm.workAddress
         })
         .then(resp => {
           console.log(resp)
@@ -204,19 +226,22 @@ export default {
               message: '新增成功！',
               showClose: true
             })
+            this.dialogFormVisible = false
+            this.getList()
           }
         })
     },
     handleDetail(row) {
-      this.$axios.get('/plantInfo/' + row.id).then(resp => {
+      this.$axios.get('/recruitment/' + row.id).then(resp => {
         console.log(resp)
         if (resp && resp.data.code === 200) {
-          this.plantForm.id = resp.data.result.id
-          this.plantForm.name = resp.data.result.name
-          this.plantForm.plantType = resp.data.result.plantType
-          this.plantForm.environment = resp.data.result.environment
-          this.plantForm.description = resp.data.result.description
-          this.plantForm.picture = resp.data.result.picture
+          this.recruitment.id = resp.data.result.id
+          this.recruitment.postName = resp.data.result.postName
+          this.recruitment.plantName = resp.data.result.plantName
+          this.recruitment.sex = resp.data.result.sex
+          this.recruitment.workYears = resp.data.result.workYears
+          this.recruitment.reward = resp.data.result.reward
+          this.recruitment.workAddress = resp.data.result.workAddress
         }
       })
       this.dialogStatus = 'update'
@@ -226,7 +251,7 @@ export default {
     },
     handleDelete(row) {
       this.$axios
-        .post('/plant/del', {
+        .post('/recruitment/del', {
           id: row.id
         })
         .then(resp => {

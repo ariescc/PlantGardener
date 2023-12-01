@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       title: '药品运营监控系统',
-      logo: require('@/assets/druglogo.png')
+      logo: require('@/assets/plantlogo.png')
     }
   }
 }

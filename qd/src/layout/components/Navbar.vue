@@ -8,7 +8,7 @@
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <span class="header-info">
-            <label class="username">你好, {{ name }}</label>
+            <!-- <label class="username">{{ name }}</label> -->
             <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
             <i class="el-icon-caret-bottom" />
           </span>

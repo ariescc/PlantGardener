@@ -13,7 +13,9 @@ import drugpricemanageRouter from './modules/drugpricemanage'
 import approvalManageRouter from './modules/approval'
 import drugInventoryManage from './modules/drugInventory'
 import saleOrderManage from './modules/saleOrderManage'
-import addSaleOrder from './modules/addSaleOrder'
+import recruitmentManageRouter from './modules/recruitmentmanage'
+import plantManageRouter from './modules/plantmanage'
+import applyPostRouter from './modules/applypost'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -154,7 +156,9 @@ export const asyncRoutes = [
   approvalManageRouter,
   drugInventoryManage,
   saleOrderManage,
-  addSaleOrder
+  recruitmentManageRouter,
+  plantManageRouter,
+  applyPostRouter
 ]
 
 const createRouter = () => new Router({

@@ -3,7 +3,7 @@
     <div class="login-container">
       <el-form ref="loginForm" :model="loginForm" class="login-form" auto-complete="on" label-position="left">
         <div class="title-container">
-          <h3 class="title">药 品 运 营 监 控 系 统</h3>
+          <h3 class="title">植 物 管 家 招 聘 网 站</h3>
         </div>
         <el-form-item prop="username">
           <span class="svg-container">
@@ -40,10 +40,10 @@
         </el-form-item>
         <el-row :gutter="50">
           <el-col :span="12">
-            <el-button :loading="loading" type="plain" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister">注册</el-button>
+            <el-button :loading="loading" type="success" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister">注册</el-button>
           </el-col>
           <el-col :span="12">
-            <el-button :loading="loading" type="plain" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+            <el-button :loading="loading" type="success" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -85,17 +85,16 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
+    handleLogin() { // 登录功能
       this.loading = true
       this.$axios
         .post('/login', {
-          username: this.loginForm.username,
-          password: this.loginForm.password
+          username: this.loginForm.username, // 用户名
+          password: this.loginForm.password // 密码
         })
         .then(resp => {
           console.log(resp)
           if (resp.data.code === 200) {
-            // var data = resp.data.result
             this.$store.dispatch('user/login', resp.data.result).then(() => {
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
@@ -175,7 +174,7 @@ $cursor: #fff;
 <style lang="scss" scoped>
 $bg: url("../../assets/background.jpg") no-repeat;
 $dark_gray:#889aa4;
-$light_gray:#3f0f00;
+$light_gray: white;
 
 #poster {
   background:url("../../assets/background.jpg") no-repeat;
